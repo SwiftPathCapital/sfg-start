@@ -75,6 +75,10 @@ h1{font-family:var(--display-font),sans-serif;font-size:clamp(2.6rem,4.5vw,3.8re
 .form-disc{font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.75rem;line-height:1.5}
 .form-disc a{color:var(--accent);text-decoration:none}
 .secure{display:flex;align-items:center;justify-content:center;gap:0.4rem;font-size:0.72rem;color:var(--muted);margin-top:0.6rem}
+.consent-wrap{display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:0.75rem}
+.consent-wrap input[type="checkbox"]{width:14px;height:14px;flex-shrink:0;margin-top:0.15rem;accent-color:var(--accent);cursor:pointer}
+.consent-wrap label{font-size:0.7rem;color:var(--muted);line-height:1.5;cursor:pointer}
+.form-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 
 .success-state{display:none;text-align:center;padding:2rem 1rem}
 .success-icon{width:60px;height:60px;border-radius:50%;background:rgba(212,160,23,0.1);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
@@ -213,7 +217,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3.5rem 2
           <div class="fg"><label>Monthly Revenue</label><select><option value="">Select range</option><option>$10K–$25K</option><option>$25K–$50K</option><option>$50K–$100K</option><option>$100K–$250K</option><option>$250K+</option></select></div>
           <div class="fg"><label>Funding Needed</label><select><option value="">Select amount</option><option>$10K–$25K</option><option>$25K–$75K</option><option>$75K–$150K</option><option>$150K–$500K</option><option>$500K+</option></select></div>
         </div>
-        <button class="form-btn" onclick="submitForm('h')">Start My Application →</button>
+        <div class="consent-wrap"><input type="checkbox" id="hConsent" onchange="toggleBtn('h')"><label for="hConsent">I agree to receive calls, SMS messages, and emails from Swift Funds Group and its lending partners regarding business funding, including via automated dialing systems. I understand consent is not required to obtain services.</label></div>
+        <button class="form-btn" id="hBtn" onclick="submitForm('h')" disabled>Start My Application →</button>
         <p class="form-disc">By submitting you agree to our <a href="#" onclick="openModal('privacy');return false">Privacy Policy</a> and <a href="#" onclick="openModal('terms');return false">Terms of Use</a>. You consent to be contacted via phone, SMS, or email including via automated systems.</p>
         <div class="secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>256-bit SSL Encrypted</div>
       </div>
@@ -305,7 +310,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3.5rem 2
           <div class="fg"><label>Time in Business</label><select><option value="">Select range</option><option>Less than 6 months</option><option>6–12 months</option><option>1–2 years</option><option>2–5 years</option><option>5+ years</option></select></div>
         </div>
         <div class="fg"><label>Funding Amount Needed</label><select><option value="">Select amount</option><option>$10K–$25K</option><option>$25K–$75K</option><option>$75K–$150K</option><option>$150K–$500K</option><option>$500K+</option></select></div>
-        <button class="form-btn" onclick="submitForm('m')">Start My Application →</button>
+        <div class="consent-wrap"><input type="checkbox" id="mConsent" onchange="toggleBtn('m')"><label for="mConsent">I agree to receive calls, SMS messages, and emails from Swift Funds Group and its lending partners regarding business funding, including via automated dialing systems. I understand consent is not required to obtain services.</label></div>
+        <button class="form-btn" id="mBtn" onclick="submitForm('m')" disabled>Start My Application →</button>
         <p class="form-disc" style="margin-top:1rem">By submitting this form you agree to our <a href="#" onclick="openModal('privacy');return false">Privacy Policy</a> and <a href="#" onclick="openModal('terms');return false">Terms of Use</a>. Submitting constitutes your express written consent to be contacted by Swift Funds Group and its partners via phone, email, or SMS, including via automated dialing systems, at the number and email provided, even if on a Do Not Call registry. Consent is not required to obtain services.</p>
       </div>
       <div class="success-state" id="mSuccess">
@@ -382,7 +388,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3.5rem 2
 function openModal(t){document.getElementById(t+'Modal').classList.add('active');document.body.style.overflow='hidden'}
 function closeModal(t){document.getElementById(t+'Modal').classList.remove('active');document.body.style.overflow=''}
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',function(e){if(e.target===this){this.classList.remove('active');document.body.style.overflow=''}})})
+function toggleBtn(p){
+  document.getElementById(p+'Btn').disabled=!document.getElementById(p+'Consent').checked;
+}
 function submitForm(p){
+  if(!document.getElementById(p+'Consent').checked)return;
   var b=p==='h'?'hFormBody':'mFormBody',s=p==='h'?'hSuccess':'mSuccess';
   document.getElementById(b).style.display='none';
   document.getElementById(s).style.display='block';
